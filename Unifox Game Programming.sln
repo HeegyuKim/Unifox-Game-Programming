@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unifox Game Programming", "Unifox Game Programming\Unifox Game Programming.vcxproj", "{94ABDA32-F85B-42CE-A352-1C5C53D92EA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94ABDA32-F85B-42CE-A352-1C5C53D92EA7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94ABDA32-F85B-42CE-A352-1C5C53D92EA7}.Debug|Win32.Build.0 = Debug|Win32
+		{94ABDA32-F85B-42CE-A352-1C5C53D92EA7}.Release|Win32.ActiveCfg = Release|Win32
+		{94ABDA32-F85B-42CE-A352-1C5C53D92EA7}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
