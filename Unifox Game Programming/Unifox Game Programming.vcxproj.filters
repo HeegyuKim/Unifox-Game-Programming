@@ -69,6 +69,9 @@
     <ClCompile Include="Wrapping.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
+    <ClCompile Include="LoadBitmap.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SOIL\image_DXT.h">
