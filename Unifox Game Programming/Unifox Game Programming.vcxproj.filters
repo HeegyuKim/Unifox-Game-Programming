@@ -72,6 +72,12 @@
     <ClCompile Include="LoadBitmap.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
+    <ClCompile Include="MakeTexture.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="MakeTextureBySOIL.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SOIL\image_DXT.h">

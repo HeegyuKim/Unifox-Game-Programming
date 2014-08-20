@@ -3,83 +3,22 @@
 #include <stdio.h>
 #include "SOIL/SOIL.h"
 #include "glext.h"
-#include <Windows.h>
 
-GLuint texture = 0;
-
-//
-// 24bit 비트맵을 읽는다
-bool LoadBitmap(const char* filename, char** data, int* width, int* height)
-{
-	bool result;
-	FILE *fp = fopen(filename, "rb");
-	if(!fp)
-		return false;
-	
-	BITMAPFILEHEADER file = {0};
-	BITMAPINFOHEADER info = {0};
-
-	// 파일 헤더를 읽는다.
-	fread(&file, sizeof(file), 1, fp);
-
-	// 비트맵 파일이 맞는가?
-	result = file.bfType == 0x4D42;
-	if(result)
-	{
-		// 그렇다면 정보를 더 읽는다.
-		fread(&info, sizeof(info), 1, fp);
-	}
-
-	
-	// 색상 깊이가 24비트인가?
-	result = info.biBitCount == 24;
-	if(result)
-	{
-		// 픽셀 정보가 있는 위치로 
-		// 파일 커서를 옮긴다.
-		fseek(fp, file.bfOffBits, SEEK_SET);
-
-		// 할당
-		*data = (char*)malloc(info.biSizeImage);
-		*width = info.biWidth;
-		*height = info.biHeight;
-
-		// 픽셀들을 읽는다.
-		fread(*data, info.biSizeImage, 1, fp);
-	}
-
-	// 파일 닫기
-	fclose(fp);
-
-	return result;
-}
+GLuint texture;
 
 bool OnSetup()
 {
-	
-	char *data = 0;
-	int width, height;
-
-	bool result = LoadBitmap("선장님.bmp", &data,
-				&width, &height);
-	if(!result || !data)
-		return false;
-	
 	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
 	
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-		width, height, 0, GL_BGR,
-		GL_UNSIGNED_BYTE, data);
-
-	free(data);
+	texture = SOIL_load_OGL_texture (
+				"제로픈개발자.png",
+				SOIL_LOAD_AUTO,
+				SOIL_CREATE_NEW_ID,
+				SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y );
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	return texture != 0;
 }
@@ -101,24 +40,51 @@ void OnDisplay()
 	glBegin(GL_TRIANGLE_STRIP);
 
 	// 왼쪽 위
-	glTexCoord2f(0, 1);
+	glTexCoord2f(-1, 2);
 	glVertex2f(-1, 1);
 
 	// 오른쪽 위
-	glTexCoord2f(1, 1);
+	glTexCoord2f(2, 2);
 	glVertex2f( 1, 1);
 	
 	// 왼쪽 아래
-	glTexCoord2f(0, 0);
+	glTexCoord2f(-1, -1);
 	glVertex2f(-1,-1);
 
 	// 오른쪽 아래
-	glTexCoord2f(1, 0);
+	glTexCoord2f(2, -1);
 	glVertex2f( 1,-1);
 
 	glEnd();
 
 	glFlush();
+}
+
+void OnKeyboard(unsigned char key, int, int)
+{
+	switch(key) 
+	{
+	case 'q':
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		break;
+	case 'w':
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		break;
+	case 'e':
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		break;
+	case 'r':
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		break;
+	default:
+		return;
+	}
+
+	glutPostRedisplay();
 }
 
 
@@ -141,7 +107,7 @@ int main(int argc, char** argv)
 	
 	// 함수 등록
 	glutDisplayFunc(OnDisplay);
-
+	glutKeyboardFunc(OnKeyboard);
 	
 	if(OnSetup())
 	{
